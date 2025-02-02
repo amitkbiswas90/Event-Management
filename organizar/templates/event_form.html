@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Even Create{% endblock %}
+{% block eventsFroms %} 
+    <div class="bg-gray-50">
+        <div class="max-w-2xl mx-auto p-6 lg:p-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
+                {% if messages %}
+                <div class="space-y-2 mb-4">
+                    {% for message in messages %}
+                    <div class="px-4 py-2 rounded-lg {% if message.tags == 'success' %} bg-blue-100 {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <h1 class="text-3xl font-bold text-gray-800 text-center mb-8">Create New Event</h1>
+
+            <form method="POST" class="space-y-6">
+                    {% csrf_token %}
+
+                    {% for field in event_form %}
+                    <div class="flex flex-col md:flex-row gap-3 items-start  md:items-center">
+                        <label class="block text-sm font-medium text-gray-700 md:w-1/4">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+
+                        <div class="w-full md:flex-1">
+                            {{ field }}
+
+                            {% if field.help_text %}
+                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                            <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-blue-400 text-white px-6 py-3 rounded-lg font-medium
+                            hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2
+                            focus:ring-blue-500 focus:ring-offset-2">
+                            Create
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock eventsFroms %}
+
+

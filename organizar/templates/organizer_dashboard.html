@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Organizer Dashboard{% endblock %}
+
+{% block content %}
+    <div class="bg-gray-50 ml-[5%] mr-[5%] py-4">
+        <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="px-2 py-1 
+                            {% if 'success' in message.tags %} bg-blue-100 
+                            {% elif 'error' in message.tags %} bg-red-500 
+                            {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+        </div>
+            
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="uppercase text-sm font-medium text-gray-500 mb-4">Total Participants</h3>
+                    <p class="text-3xl font-semibold mb-1">{{ total_pat }}</p>
+                </div>
+                
+                <a href="{% url 'organizer-dashboard' %}?type=all" class="md:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6 h-full">
+                        <h3 class="uppercase text-sm font-medium text-gray-500 mb-4">Total Events</h3>
+                        <p class="text-3xl font-semibold mb-1">{{ counts.total }}</p>
+                    </div>
+                </a>
+                
+                <a href="{% url 'organizer-dashboard' %}?type=upcoming" class="md:col-span-1 ">
+                    <div class="bg-white rounded-xl shadow-sm p-6 h-full">
+                        <h3 class="uppercase text-sm font-medium text-gray-500 mb-4">Upcoming Events</h3>
+                        <p class="text-3xl font-semibold mb-1">{{ counts.upcoming }}</p>
+                    </div>
+                </a>
+                
+                <a href="{% url 'organizer-dashboard' %}?type=past" class="md:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6 h-full">
+                        <h3 class="uppercase text-sm font-medium text-gray-500 mb-4">Past Events</h3>
+                        <p class="text-3xl font-semibold mb-1">{{ counts.past }}</p>
+                    </div>
+                </a>
+        </div>
+
+         <div class="mb-5 mt-5">
+                {% if today_events %}
+                    <div class="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Today's Events</h3>
+                        <div class="space-y-3 sm:space-y-4">
+                            {% for event in today_events %}
+                                <div class="border rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors">
+                                    <div class="flex justify-between items-start">
+                                        <div class="space-y-1 sm:space-y-2">
+                                            <div class="flex items-start gap-2 flex-wrap">
+                                                <h3 class="text-lg sm:text-xl font-semibold">{{ event.name }}</h3>
+                                                <div class="flex gap-2">
+                                                    <a href="{% url 'update-event' event.id %}" class="px-2 py-1 text-sm sm:text-base bg-blue-500 text-white">Edit</a>
+                                                    <form action="{% url 'delete-event' event.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="px-2 py-1 text-sm sm:text-base bg-red-500 text-white">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-600 text-sm sm:text-base">{{ event.description }}</p>
+                                            <div class="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                                                <span class="flex items-center">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    {{ event.date|date:"F d, Y" }}
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    {{ event.time|time:"H:i" }}
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    </svg>
+                                                    {{ event.location }}
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                                    </svg>
+                                                    {{ event.category.name }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm sm:text-base">No events found for today.</p>
+                {% endif %}
+            </div>
+
+            <!-- Filtered Events -->
+            <div class="mb-5">
+                {% if events %}
+                    <div class="bg-white shadow-md rounded-lg p-4 sm:p-6">
+                        <h2 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                            {% if request.GET.type == "upcoming" %}
+                                Upcoming Events
+                            {% elif request.GET.type == "past" %}
+                                Past Events
+                            {% else %}
+                                Total Events
+                            {% endif %}
+                        </h2>
+                        <div class="space-y-3 sm:space-y-4">
+                            {% for event in events %}
+                            <div class="border rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div class="space-y-1 sm:space-y-2">
+                                        <div class="flex items-start gap-2 flex-wrap">
+                                            <h3 class="text-lg sm:text-xl font-semibold">{{ event.name }}</h3>
+                                            <div class="flex gap-2">
+                                                <a href="{% url 'update-event' event.id %}" class="px-2 py-1 text-sm sm:text-base bg-blue-500 text-white">Edit</a>
+                                                <form action="{% url 'delete-event' event.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="px-2 py-1 text-sm sm:text-base bg-red-500 text-white">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-600 text-sm sm:text-base">{{ event.description }}</p>
+                                        <div class="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                                            <span class="flex items-center">
+                                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                </svg>
+                                                {{ event.date|date:"F d, Y" }}
+                                            </span>
+                                            <span class="flex items-center">
+                                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                {{ event.time|time:"H:i" }}
+                                            </span>
+                                            <span class="flex items-center">
+                                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                </svg>
+                                                {{ event.location }}
+                                            </span>
+                                            <span class="flex items-center">
+                                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                                </svg>
+                                                {{ event.category.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm sm:text-base">No events found.</p>
+                {% endif %}
+            </div>
+    </div>    
+{% endblock content %}
+

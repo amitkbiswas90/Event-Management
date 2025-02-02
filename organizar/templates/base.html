@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-400 text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="{% url 'home' %}" class="text-xl font-bold">
+                    EventX
+                </a>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="{% url 'home' %}" class="hover:border-b-2 font-bold">Home</a>
+                    <a href="{% url 'view-event' %}" class="hover:border-b-2 font-bold">Events</a>
+                    <a href="{% url 'create-participant' %}" class="hover:border-b-2 font-bold">Registration</a>
+                    <a href="{% url 'organizer-dashboard' %}" class="hover:border-b-2 font-bold">Dashboard</a>
+                    <div class="relative group">
+                        <button class="hover:border-b-2 font-bold">More ▾</button>
+                        <div class="absolute hidden group-hover:block bg-white text-blue-400 rounded-lg shadow-lg py-2 mt-1">
+                            <a href="{% url 'create-category' %}" class="block px-4 py-2 hover:bg-blue-50">Create Category</a>
+                            <a href="{% url 'create-event' %}" class="block px-4 py-2 hover:bg-blue-50">Create Event</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button data-drawer-target="mobile-menu" data-drawer-toggle="mobile-menu" 
+                        class="md:hidden p-2 rounded-lg hover:bg-blue-400" type="button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed top-16 left-0 z-40 h-screen p-4 overflow-y-auto bg-blue-400 w-64 transition-transform -translate-x-full md:hidden" tabindex="-1">
+        <div class="space-y-4">
+            <a href="{% url 'home' %}" class="block text-white font-bold">Home</a>
+            <a href="{% url 'view-event' %}" class="block text-white font-bold">Events</a>
+            <a href="{% url 'create-participant' %}" class="block text-white font-bold">Registration</a>
+            <a href="{% url 'organizer-dashboard' %}" class="block text-white font-bold">Dashboard</a>
+            <div class="pt-4 border-t border-blue-400">
+                <p class="text-white font-bold mb-2">Organizer Tools:</p>
+                <a href="{% url 'create-category' %}" class="block text-blue-100 hover:text-white">Create Category</a>
+                <a href="{% url 'create-event' %}" class="block text-blue-100 hover:text-white mt-2">Create Event</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        {% block hero %}{% endblock hero %}
+        {% block registration %}{% endblock registration %}
+        {% block content %}{% endblock content %}
+        {% block events %}{% endblock events %}
+        {% block eventsFroms %}{% endblock eventsFroms %}
+        {% block categoryFroms %}{% endblock categoryFroms %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-400 text-white mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Brand Info -->
+                <div class="space-y-4">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold">EventX</a>
+                    <p class="text-sm text-blue-100">
+                        Empowering organizers to create memorable events since 2024
+                    </p>
+                </div>
+
+                <!-- Links Grid -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <h4 class="font-semibold text-lg">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="{% url 'home' %}" class="text-blue-100 hover:text-white">Home</a></li>
+                            <li><a href="{% url 'view-event' %}" class="text-blue-100 hover:text-white">Events</a></li>
+                            <li><a href="{% url 'create-participant' %}" class="text-blue-100 hover:text-white">Registration</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="font-semibold text-lg">Organizer</h4>
+                        <ul class="space-y-2">
+                            <li><a href="{% url 'organizer-dashboard' %}" class="text-blue-100 hover:text-white">Dashboard</a></li>
+                            <li><a href="#" class="text-blue-100 hover:text-white">Support</a></li>
+                            <li><a href="#" class="text-blue-100 hover:text-white">Documentation</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-3">
+                    <h4 class="font-semibold text-lg">Contact Us</h4>
+                    <div class="text-blue-100 space-y-2">
+                        <p>123 Event Street</p>
+                        <p>Newmarket, Dhaka 1201</p>
+                        <p>Email: support@eventx.com</p>
+                        <p>Phone: (+880) 123-4567</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright & Social -->
+            <div class="mt-8 pt-6 border-t border-blue-400">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+                    <div class="text-blue-100 mb-2 md:mb-0">
+                        &copy; 2024 EventX. All rights reserved.
+                    </div>
+                    <div class="flex space-x-4">
+                        <!-- Social Icons (same as before) -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
