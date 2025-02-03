@@ -27,7 +27,7 @@ class CustomFormMixin:
 
                 elif isinstance(field.widget, forms.Textarea):
                     field.widget.attrs.update({
-                        'class': f'{self.base_style} resize-y min-h-[100px] w-3/4',
+                        'class': f'{self.base_style} resize-y min-h-[100px] w-full',
                         'rows': 3,
                         'placeholder': f"Describe {field.label.lower()}"
                     })
